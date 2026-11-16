@@ -1,0 +1,20 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/
+app/keys/*.keystore
+
+# Local secrets, signing material and build output
+*.apk
+*.aab
+*.jks
+*.keystore
+keystore.properties
+erp-hook.properties
+app/keys/*
+!app/keys/README.md
+.claude/settings.local.json
+.DS_Store
+captures/

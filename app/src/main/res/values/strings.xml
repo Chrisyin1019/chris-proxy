@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Chris Proxy</string>
+    <string name="vpn_channel_name">代理連線</string>
+    <string name="vpn_notification">代理服務執行中</string>
+</resources>
