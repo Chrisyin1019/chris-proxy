@@ -33,6 +33,7 @@ keyPassword=…
 ## 每次發布
 
 1. 調高 `app/build.gradle.kts` 的 `versionCode` 與 `versionName`。
+   公開 APK 預設不帶更新伺服器網址；若要內建網址，只能在建置指令中明確設定 `CHRIS_PROXY_UPDATE_URL` 為可公開的 HTTPS 網址。`local.properties` 及本機更新屬性不會進入 release。
 2. 測試、lint、建置與驗證簽章：
 
 ```bash

@@ -25,8 +25,14 @@ val updateProps = Properties().apply {
     if (updatePropsFile.exists()) updatePropsFile.reader(Charsets.UTF_8).use { load(it) }
     if (localPropsFile.exists()) localPropsFile.reader(Charsets.UTF_8).use { load(it) }
 }
-val defaultUpdateUrl = System.getenv("CHRIS_PROXY_UPDATE_URL")
+// Release APKs must never inherit a private endpoint from local.properties or
+// the developer's external update properties. Only an explicit environment
+// variable can set a release feed; without it the in-app setting stays blank.
+val releaseUpdateUrl = System.getenv("CHRIS_PROXY_UPDATE_URL") ?: ""
+val debugUpdateUrl = System.getenv("CHRIS_PROXY_UPDATE_URL")
     ?: updateProps.getProperty("updateUrl", "")
+fun quotedUpdateUrl(value: String) =
+    "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
 android {
     namespace = "hk.chris.proxy"
@@ -39,11 +45,6 @@ android {
         targetSdk = 36
         versionCode = 16
         versionName = "1.4.1"
-        buildConfigField(
-            "String",
-            "DEFAULT_UPDATE_URL",
-            "\"" + defaultUpdateUrl.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-        )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             // Target device is GrapheneOS on Pixel/ARM64. Avoid shipping
@@ -80,6 +81,7 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField("String", "DEFAULT_UPDATE_URL", quotedUpdateUrl(debugUpdateUrl))
             // A project-local debug key is generated in keys/ and is never read
             // from the user's shared ~/.android/debug.keystore.
             signingConfig = signingConfigs.getByName("projectDebug")
@@ -87,6 +89,7 @@ android {
             versionNameSuffix = "-debug"
         }
         release {
+            buildConfigField("String", "DEFAULT_UPDATE_URL", quotedUpdateUrl(releaseUpdateUrl))
             // libbox is gomobile JNI; shrinking would need exhaustive keep
             // rules and buys little next to the native library size.
             isMinifyEnabled = false

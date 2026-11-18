@@ -87,7 +87,7 @@ Chris 系列的 Android 代理 App（`hk.chris.proxy`），針對 GrapheneOS / A
 - 只接受 HTTPS；下載網址必須與資訊清單同主機、同埠，且不跟隨重導。
 - 下載後檢查容量上限、SHA-256、套件名稱、版本遞增，以及 APK 簽章憑證是否與目前安裝版本完全相同；任何一項不符都不會交給系統安裝器。
 - 更新只覆蓋同簽章的 APK。更換簽章金鑰後，舊版無法透過此流程升級。
-- 預設更新網址可在建置時用 `CHRIS_PROXY_UPDATE_URL` 或 `local.properties` 的 `updateUrl` 指定；未設定時 App 顯示「尚未設定」。
+- 正式版只有在建置時明確設定 `CHRIS_PROXY_UPDATE_URL` 才內建預設更新網址；未設定時 App 顯示「尚未設定」，使用者可在設定頁自行填寫。`local.properties` 或外部更新屬性只供 debug 版使用，不會進入正式版 APK。
 - 下載與檢查中的對話框只在目前 Activity 存活時顯示；離開畫面（旋轉、返回、結束）不會崩潰或誤跳視窗，下載完成後重新檢查即可。
 
 ```json
