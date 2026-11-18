@@ -37,6 +37,16 @@ export JAVA_HOME="$HOME/.jdks/jbr-17.0.14"
 4. 完成一次實際下載、交給系統安裝器、覆蓋安裝後版本與 App 資料保留。
 5. 在下載途中旋轉螢幕、按返回離開設定頁、或把 App 切到背景後結束，確認不崩潰；回到 App 重新檢查時可以再啟動一次。
 
+## 虛擬機測試（2026-11-18）
+
+Android 14／API 34、Google APIs x86_64 映像（支援 ARM64 轉譯）：
+
+- 脫敏後的原版 ARM64 release APK（1.4.1／versionCode 16；SHA-256 `eb401f5bd0ef43361538062bac96eed102621ebeffd3dfe886095258aa2691e0`）可安裝、冷啟動、進入設定；未設定預設更新伺服器時顯示提示，HTTP 網址不會保存，HTTPS 測試網址的檢查失敗會顯示錯誤而不崩潰。
+- 可新增僅供測試的本機 SS 節點，但首次同意 VPN 授權後，ARM64 函式庫在 x86_64 轉譯環境發生原生 `SIGILL`，App 退出。這不代表 ARM64 實機會重現，也不能算原版 APK 的 VPN 驗收通過。
+- 另在暫存目錄以**相同程式碼、版本和簽章**建置 x86_64 專用測試 APK；覆蓋安裝後測試節點保留，VPN 啟動並建立 `tun0`（Android 回報 `IS_VALIDATED`），中斷後 `tun0` 移除，無崩潰。這份 x86_64 測試 APK **不是**公開發布檔。
+- `connectedDebugAndroidTest` 在此虛擬機執行 2/2 通過；JVM 單元測試 63/63、`lintRelease` 及 release 組裝通過。
+- 未使用真實節點，未驗證代理出口、更新伺服器的有效 manifest、APK 下載／安裝或 Android 17 的 ARM64 實機行為。公開正式 APK 前仍須在 ARM64 實機走完更新與 VPN 驗收。
+
 ## 實機驗收紀錄
 
 2026-10-25，Pixel 9 Pro（caiman）、Android 17（build CP3A.261005.005／2026102100），1.4.0-mvp：
@@ -91,4 +101,4 @@ APK 只包含 `arm64-v8a/libbox.so`。
 11. 抽屜、連線燈顏色、首頁「需要處理」計數、BottomSheet 詳情、返回鍵順序。
 12. 設定切換深淺色；GrapheneOS 服務停止、權限撤銷。
 
-延遲按鈕測的是端點 TCP connect；它不是完整代理握手測試。
+延遲按鈕使用 sing-box URL 測試，包含協定握手及測試網址請求；不等同於完整 VPN 流量驗收。
