@@ -49,6 +49,10 @@ Android 14／API 34、Google APIs x86_64 映像（支援 ARM64 轉譯）：
 
 ## 實機驗收紀錄
 
+1.4.1 正式候選檔（SHA-256 見上方虛擬機紀錄）：Pixel 9 Pro／Android 17 從 1.4.0-mvp 以 ADB 覆蓋安裝，裝置端 `base.apk` 雜湊與候選檔一致。使用既有設定連線後，Android 回報 VPN `IS_VALIDATED`；中斷時 `tun0` 消失，再次連線後恢復。未逐一重跑各代理協定。
+
+另於隔離的 API 34 模擬器，以同一更新器程式碼、相同簽章、較低 versionCode 的測試客戶端讀取本機 HTTPS manifest。只有該測試客戶端信任測試憑證。點選「立即更新」及「立即安裝」後，Android 系統安裝器完成更新；複核 versionCode 為 16 且 `base.apk` SHA-256 與公開候選檔相同。此流程驗證客戶端下載與安裝，不代表公開版內建了更新站。
+
 2026-10-25，Pixel 9 Pro（caiman）、Android 17（build CP3A.261005.005／2026102100），1.4.0-mvp：
 
 - 專案正式 Gradle Wrapper clean build 通過；JVM 測試 49/49、Espresso 詞庫 UI 測試 2/2、`lintDebug`、debug／release duplicate-class 檢查及 APK 組裝全部通過。
